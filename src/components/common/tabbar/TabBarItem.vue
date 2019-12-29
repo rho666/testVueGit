@@ -39,7 +39,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .tab-bar-item {
     flex: 1;
     text-align: center;
@@ -49,9 +49,5 @@ export default {
     width: 20px;
     vertical-align: middle;
     margin-top: 4px;
-  }
-
-  .active {
-    color: rgb(248, 114, 185);
   }
 </style>
