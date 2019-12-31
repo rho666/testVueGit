@@ -1,6 +1,8 @@
 <template>
   <div>
-    <router-view></router-view>
+    <keep-alive exclude='Detail'>
+      <router-view></router-view>
+    </keep-alive>
     <tab-bar>
       <tab-bar-item link="/home">
         <img src="~assets/img/tabbar/home.svg" alt slot="item-icon" />

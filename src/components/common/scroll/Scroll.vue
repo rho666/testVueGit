@@ -12,8 +12,14 @@ import BScroll from 'better-scroll'
 export default {
   name: 'Scroll',
   props: {
-    probeType: Number,
-    default: 0
+    probeType: {
+      type:Number,
+      default: 0
+    },
+    pullUpLoad: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -24,17 +30,37 @@ export default {
   mounted() {
     this.bscroll = new BScroll(this.$refs.wrapper, {
       probeType: this.probeType,
-      pullUpLoad: true,  
+      pullUpLoad: this.pullUpLoad,  
       click: true,
     })
 
-    this.bscroll.on('scroll', position => {
-      this.$emit('scroll', position)
-    })
+    // 监听滚动的距离
+    if (this.probeType === 2 || this.probeType === 3) {
+      this.bscroll.on('scroll', position => {
+        this.$emit('scroll', position)
+      })
+    }
+    
+    // 上拉加载更多
+    if (this.pullUpLoad) {
+      this.bscroll.on('pullingUp', () => {
+        this.$emit('pullingUp')
+      })
+    }
+    
   },
   methods: {
-    backTop(x, y, time=300) {
-      this.bscroll.scrollTo(x, y, time)
+    scrollTo(x, y, time=300) {
+      this.bscroll && this.bscroll.scrollTo(x, y, time)
+    },
+    finishPullUp() {
+      this.bscroll && this.bscroll.finishPullUp()
+    },
+    refresh() {
+      this.bscroll && this.bscroll.refresh()
+    },
+    getsaveY() {
+      return this.bscroll.y
     }
   }
 }

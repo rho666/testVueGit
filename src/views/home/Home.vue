@@ -1,13 +1,25 @@
 <template>
   <div id="home">
     <nav-bar class='home-nav'><div slot="center">首页</div></nav-bar>
-    <Scroll class='content' ref='scroll' :probeType='3' @scroll='scroll'>
-      <home-swiper :banners='banners'/>
+    <tab-control class="tab-control1" 
+                   :titles="['流行','新品','精选']"
+                   @tabClick='tabClick'
+                   ref='tabcontrol1'
+                   v-show='showFixed' />
+    <Scroll class='content'
+            ref='scroll'
+            :probeType='3' 
+            @scroll='scroll'
+            :pullUpLoad='true'
+            @pullingUp='loadMore'>
+      <home-swiper :banners='banners'
+                   @bannarLoad='bannerLoaded'/>
       <home-recommend :recommends='recommends'/>
       <week-ranking/>
-      <tab-control class="tab-control" 
-      :titles="['流行','新品','精选']"
-      @tabClick='tabClick' />
+      <tab-control class="tab-control2" 
+                   :titles="['流行','新品','精选']"
+                   @tabClick='tabClick'
+                   ref='tabcontrol2' />
       <goods-list :goodslists='showGoods'/>
     </Scroll>
     <back-top @click.native='backTop' v-show='isBackTop' />
@@ -27,6 +39,7 @@ import WeekRanking from './childComponents/WeekRanking'
 
 
 import {getHomeMultidata, getGoodsData} from 'network/homeRequest'
+import {debounce} from 'common/utils.js'
 
 export default {
   name: 'Home',
@@ -41,6 +54,9 @@ export default {
       },
       currentType: 'pop',
       isBackTop: false,
+      offsetTop: 0,
+      showFixed: false,
+      saveY: 0,
     }
   },
   components: {
@@ -61,24 +77,49 @@ export default {
     // 请求商品数据
     this.getGoodsData('pop')
     this.getGoodsData('new')
-    this.getGoodsData('sell')
+    this.getGoodsData('sell')   
+  },
+  mounted() {
+    // 通过$bus监听图片加载完成，$bus时使用原型prototype定义
+    const refresh = debounce(this.$refs.scroll.refresh, 50)
+    this.$bus.$on('imgLoaded', () => {
+      refresh()
+    })
+  },
+  destroyed() {
+    console.log('1')
+  },
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.saveY, 0)
+    this.$refs.scroll.refresh()
+  },
+  deactivated() {
+    this.saveY = this.$refs.scroll.getsaveY()
   },
   computed: {
     showGoods() {
       return this.goods[this.currentType].list
     }
   },
-  methods: {
+  methods: {  
     /**
-     * 时间监听相关的方法
+     * 事件监听相关的方法
      */
+    bannerLoaded() {
+      this.offsetTop = this.$refs.tabcontrol2.$el.offsetTop
+    },
+
     backTop() {
-      this.$refs.scroll.backTop(0, 0)
+      this.$refs.scroll.scrollTo(0, 0)
     },
 
     scroll(position){
       // console.log(position)
-      this.isBackTop = -(position.y) > 1000;
+      // 判断显示回到顶部
+      this.isBackTop = (-position.y) > 1000;
+
+      // 判断topcontrol是否吸顶
+      this.showFixed = (-position.y) > this.offsetTop
     },
 
     tabClick(index) {
@@ -93,6 +134,13 @@ export default {
           this.currentType = 'sell'
           break;
       }
+      this.$refs.tabcontrol1.currentIndex = index
+      this.$refs.tabcontrol2.currentIndex = index
+    },
+
+    loadMore() {
+      this.getGoodsData(this.currentType)
+      this.$refs.scroll.finishPullUp()
     },
 
     /**
@@ -105,6 +153,7 @@ export default {
         this.recommends = res.data.recommend.list;
       })
     },
+
     getGoodsData(type) {
       const page = this.goods[type].page + 1
       getGoodsData(type, page)
@@ -120,25 +169,19 @@ export default {
 <style scoped>
   #home {
     height: 100vh;
-    /* padding-top: 43px; */
     position: relative;
   }
 
   .home-nav {
     background-color: var(--color-tint);
     color: #fff;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 10;
+    z-index: 100;
   }
 
-  /* .tab-control {
-    position: sticky;
-    top: 44px;
+  .tab-control1 {
+    position: relative;
     z-index: 10;
-  } */
+  }
 
   .content{
     position: absolute;
@@ -146,5 +189,6 @@ export default {
     bottom: 49px;
     left: 0;
     right: 0;
+    overflow: hidden;
   }
 </style>

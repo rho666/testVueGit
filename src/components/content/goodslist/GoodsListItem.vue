@@ -1,7 +1,7 @@
 <template>
-  <figure class='goods-msg'>
-    <a :href="goodsmsg.link">
-      <img :src="goodsmsg.show.img" alt="">
+  <figure class='goods-msg' @click='itemClick'>
+    <a>
+      <img :src="goodsmsg.show.img" alt="" @load='imgLoad'>
       <figcaption class="goods-title">{{goodsmsg.title}}</figcaption>
       <span class='price'>{{goodsmsg.price}}</span>
       <span class='collect'>{{goodsmsg.cfav}}</span>
@@ -19,13 +19,24 @@ export default {
         return {}
       }
     }
+  },
+  methods: {
+    imgLoad() {
+      // console.log('imgload')
+      this.$bus.$emit('imgLoaded')
+    },
+    itemClick() {
+      this.$router.push('/detail/'+this.goodsmsg.iid)  
+    }
   }
 }
 </script>
 
 <style>
   .goods-msg {
-    width: 48%;
+    /* flex: 1; */
+    width: 150px;
+    margin-bottom: 20px;
     text-align: center;
     font-size: 12px;
   }
