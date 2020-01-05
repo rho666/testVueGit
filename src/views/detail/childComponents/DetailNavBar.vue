@@ -4,7 +4,7 @@
       <img src="~assets/img/common/back.svg" alt="">
     </div>
     <div class='center' slot='center'>
-      <div v-for='(item,index) in titles' 
+      <div v-for='(item,index) in titles' :key='index' 
            class='item-nav'
            :class='{active: currentIndex === index}'
            @click='itemClick(index)'>{{item}}</div>
@@ -29,9 +29,10 @@ export default {
   methods: {
     itemClick(index) {
       this.currentIndex = index
+      this.$emit('itemClick', index)
     },
     backClick() {
-      this.$router.back(-1);
+      this.$router.back(-1)
     }
   }
 }

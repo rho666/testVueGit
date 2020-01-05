@@ -40,6 +40,7 @@ import WeekRanking from './childComponents/WeekRanking'
 
 import {getHomeMultidata, getGoodsData} from 'network/homeRequest'
 import {debounce} from 'common/utils.js'
+import {itemListenMixin} from 'common/mixin.js'
 
 export default {
   name: 'Home',
@@ -59,6 +60,7 @@ export default {
       saveY: 0,
     }
   },
+  mixins: [itemListenMixin],
   components: {
     NavBar,
     HomeSwiper,
@@ -79,22 +81,16 @@ export default {
     this.getGoodsData('new')
     this.getGoodsData('sell')   
   },
-  mounted() {
-    // 通过$bus监听图片加载完成，$bus时使用原型prototype定义
-    const refresh = debounce(this.$refs.scroll.refresh, 50)
-    this.$bus.$on('imgLoaded', () => {
-      refresh()
-    })
-  },
-  destroyed() {
-    console.log('1')
-  },
   activated() {
     this.$refs.scroll.scrollTo(0, this.saveY, 0)
     this.$refs.scroll.refresh()
   },
   deactivated() {
+    // 保存离开时的y值
     this.saveY = this.$refs.scroll.getsaveY()
+    // 取消全局事件的监听
+    this.$bus.$off('imgLoaded', this.itemImgListen)
+
   },
   computed: {
     showGoods() {

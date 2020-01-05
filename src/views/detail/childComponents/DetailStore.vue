@@ -18,7 +18,7 @@
       <div class='center'></div>
       <div class="des-right">
         <table >
-          <tr v-for='item in store.score'>
+          <tr v-for='(item,index) in store.score' :key='index'>
             <td>{{item.name}}</td>
             <td class='td-center' :class='{red : item.isBetter}'>{{item.score}}</td>
             <td v-if='item.isBetter'><p class='g-color'>高</p></td>

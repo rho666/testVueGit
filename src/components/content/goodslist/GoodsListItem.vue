@@ -1,7 +1,7 @@
 <template>
   <figure class='goods-msg' @click='itemClick'>
     <a>
-      <img :src="goodsmsg.show.img" alt="" @load='imgLoad'>
+      <img :src="showImg" alt="" @load='imgLoad'>
       <figcaption class="goods-title">{{goodsmsg.title}}</figcaption>
       <span class='price'>{{goodsmsg.price}}</span>
       <span class='collect'>{{goodsmsg.cfav}}</span>
@@ -28,11 +28,16 @@ export default {
     itemClick() {
       this.$router.push('/detail/'+this.goodsmsg.iid)  
     }
+  },
+  computed: {
+    showImg() {
+      return this.goodsmsg.image || this.goodsmsg.show.img
+    }
   }
 }
 </script>
 
-<style>
+<style scoped>
   .goods-msg {
     /* flex: 1; */
     width: 150px;

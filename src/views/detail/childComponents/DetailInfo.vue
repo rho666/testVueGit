@@ -4,10 +4,10 @@
       <div class='left-line line'></div>
       <p>{{goodsInfo.desc}}</p>
       <div class="right-line line"></div>
-      <p v-for='items in goodsInfo.detailImage'>{{items.key}}</p>
+      <p v-for='(items,index) in goodsInfo.detailImage' :key='index'>{{items.key}}</p>
     </div>
-    <div v-for='items in goodsInfo.detailImage' class="info-img">
-      <img v-for='item in items.list' :src="item" alt="" @load="imgLoad">
+    <div v-for='(items,index) in goodsInfo.detailImage' :key='index' class="info-img">
+      <img v-for='(item,indey) in items.list' :key='indey' :src="item" alt="" @load="imgLoad">
     </div>
   </div>
 </template>
