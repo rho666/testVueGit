@@ -8,7 +8,7 @@
                    v-show='showFixed' />
     <Scroll class='content'
             ref='scroll'
-            :probeType='3' 
+            :probe-type='3' 
             @scroll='scroll'
             :pullUpLoad='true'
             @pullingUp='loadMore'>

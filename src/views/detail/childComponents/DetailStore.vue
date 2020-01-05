@@ -20,11 +20,16 @@
         <table >
           <tr v-for='item in store.score'>
             <td>{{item.name}}</td>
-            <td class='td-center'>{{item.score}}</td>
-            <td v-if='item.isBetter' class='g-color'>高</td>
-            <td v-else class='b-color'>低</td>
+            <td class='td-center' :class='{red : item.isBetter}'>{{item.score}}</td>
+            <td v-if='item.isBetter'><p class='g-color'>高</p></td>
+            <td v-else><p class='b-color'>低</p></td>
           </tr>
         </table>
+      </div>
+    </div>
+    <div class='enter-store'>
+      <div>
+        <a href="">进店逛逛</a>
       </div>
     </div>
   </div>
@@ -105,7 +110,7 @@ export default {
   }
 
   .des-left-goods {
-    margin-left: 10px;
+    /* margin-left: 10px; */
   }
 
   table {
@@ -129,5 +134,32 @@ export default {
 
   .td-center {
     padding: 3px;
+    color: green;
   }
+
+  .red {
+    color: red;
+  }
+
+  .green {
+    color: green;
+  }
+
+  .enter-store {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    border-bottom: 3px solid rgb(214, 208, 208)
+  }
+
+  .enter-store div{
+    width: 50%;
+    background-color: rgb(219, 211, 211);
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 10px;
+    font-size: 12px;
+  }
+
+  
 </style>

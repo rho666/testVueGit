@@ -30,3 +30,10 @@ export class Store {
     this.shopLogo = shopInfo.shopLogo
   }
 }
+
+export class ParamsInfo {
+  constructor(info, rule) {
+    this.set = info.set,
+    this.rule = rule.tables
+  }
+}

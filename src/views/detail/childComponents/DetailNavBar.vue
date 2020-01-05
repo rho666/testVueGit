@@ -31,7 +31,7 @@ export default {
       this.currentIndex = index
     },
     backClick() {
-      this.$router.back()
+      this.$router.back(-1);
     }
   }
 }
