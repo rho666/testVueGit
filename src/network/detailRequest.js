@@ -23,6 +23,8 @@ export class Goods {
     this.discountDesc = itemInfo.discountDesc,
     this.columns = columns,
     this.services = shopInfo.services
+    this.desc = itemInfo.desc
+    this.lowNowPrice = itemInfo.lowNowPrice
   }
 }
 

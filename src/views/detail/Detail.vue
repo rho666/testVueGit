@@ -13,7 +13,8 @@
       <detail-comment-info :comment-info='commentInfo' ref='comment'/>
       <goods-list :goodslists='recommends' ref='recommend'/>
     </scroll>
-    <detail-bottom-bar/>
+    <detail-bottom-bar @addCart='addToCart'/>
+    <back-top @click.native='backTop' v-show='isBackTop'/>
   </div>
 </template>
 
@@ -29,8 +30,9 @@ import DetailBottomBar from './childComponents/DetailBottomBar'
 
 import Scroll from 'components/common/scroll/Scroll'
 import GoodsList from 'components/content/goodslist/GoodsList'
-import {itemListenMixin} from 'common/mixin.js'
+import {itemListenMixin, backTopMixin} from 'common/mixin.js'
 import {debounce} from 'common/utils.js'
+import {mapActions} from 'vuex'
 
 import {getDetailData,Goods,Store,ParamsInfo,getRecommends} from 'network/detailRequest.js'
 
@@ -51,7 +53,7 @@ export default {
       currentIndex: 0
     }
   },
-  mixins: [itemListenMixin],
+  mixins: [itemListenMixin, backTopMixin],
   components: {
     DetailNavBar,
     DetailSwiper,
@@ -62,13 +64,13 @@ export default {
     DetailCommentInfo,
     GoodsList,
     DetailBottomBar,
-
     Scroll
   },
   created() {
     this.iid = this.$route.params.iid
     getDetailData(this.iid)
     .then(res => {
+      console.log(res)
       // 1.获取数据
       let data = res.result
       // 2.取出轮播图的数据
@@ -101,14 +103,13 @@ export default {
         this.themeIndex.push(this.$refs.comment.$el.offsetTop)
         this.themeIndex.push(this.$refs.recommend.$el.offsetTop)
         this.themeIndex.push(Number.MAX_VALUE)
-
-        console.log(this.themeIndex)
     })
   },
   destroyed() {
     this.$bus.$off('imgLoaded', this.itemImgListen)
   },
   methods: {
+    ...mapActions(['addCart']),
     imgLoaded() {
       this.$refs.scroll.refresh();
       this.getThemeIndex()
@@ -125,6 +126,22 @@ export default {
           this.$refs.topBar.currentIndex = this.currentIndex
         }
       }
+
+      // backTop滚到一定位置显示
+      this.showBackTop(position)
+    },
+    addToCart() {
+      // 获取购物车需要展示的信息
+      const product = {}
+      product.image = this.topImages[0]
+      product.title = this.goods.title
+      product.desc = this.goods.desc
+      product.lowNowPrice = this.goods.lowNowPrice
+      product.iid = this.iid
+
+      this.addCart(product).then(res => {
+        console.log(res)
+      })
     }
   }
 }

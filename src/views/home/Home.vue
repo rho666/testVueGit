@@ -31,16 +31,14 @@ import NavBar from 'components/common/navbar/NavBar'
 import TabControl from 'components/common/tabcontrol/TabControl'
 import Scroll from 'components/common/scroll/Scroll'
 import GoodsList from 'components/content/goodslist/GoodsList'
-import BackTop from 'components/content/backtop/BackTop'
 
 import HomeSwiper from './childComponents/HomeSwiper'
 import HomeRecommend from './childComponents/HomeRecommend'
 import WeekRanking from './childComponents/WeekRanking'
 
-
 import {getHomeMultidata, getGoodsData} from 'network/homeRequest'
 import {debounce} from 'common/utils.js'
-import {itemListenMixin} from 'common/mixin.js'
+import {itemListenMixin, backTopMixin} from 'common/mixin.js'
 
 export default {
   name: 'Home',
@@ -60,7 +58,7 @@ export default {
       saveY: 0,
     }
   },
-  mixins: [itemListenMixin],
+  mixins: [itemListenMixin, backTopMixin],
   components: {
     NavBar,
     HomeSwiper,
@@ -69,7 +67,6 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackTop
   },
   // 生命周期函数，组件创建完成就加载
   created() {
@@ -112,7 +109,7 @@ export default {
     scroll(position){
       // console.log(position)
       // 判断显示回到顶部
-      this.isBackTop = (-position.y) > 1000;
+      this.showBackTop(position)
 
       // 判断topcontrol是否吸顶
       this.showFixed = (-position.y) > this.offsetTop

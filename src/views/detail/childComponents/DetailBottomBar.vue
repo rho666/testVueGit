@@ -13,7 +13,7 @@
       <figcaption>收藏</figcaption>
     </figure>
     <div class='shop'>
-      <div class='shop-cat'>加入购物车</div>
+      <div class='shop-cat' @click='addToCart'>加入购物车</div>
       <div class='buies'>购买</div>
     </div>
   </div>
@@ -22,7 +22,11 @@
 <script>
 export default {
   name: 'DetailBottomBar',
-
+  methods: {
+    addToCart() {
+      this.$emit('addCart')
+    }
+  }
 }
 </script>
 
