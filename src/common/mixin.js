@@ -1,5 +1,6 @@
 import {debounce} from './utils'
 import BackTop from 'components/content/backtop/BackTop'
+import Toast from 'components/content/toast/Toast'
 
 export const itemListenMixin = {
   data() {
@@ -32,5 +33,28 @@ export const backTopMixin  = {
     showBackTop (position) {
       this.isBackTop = (-position.y) > 1000;
     },
+  }
+}
+
+export const ToastMixin = {
+  data() {
+    return {
+      message: '',
+      isShow: false
+    }
+  },
+  components: {
+    Toast
+  },
+  methods: {
+    show(msg, delay=2000) {
+      this.message = msg
+      this.isShow = true
+
+      setTimeout(() => {
+        this.isShow = false
+        this.message = ''
+      }, delay)
+    }
   }
 }

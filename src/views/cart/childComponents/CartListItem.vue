@@ -1,7 +1,7 @@
 <template>
   <div class='cart-list-item'>
     <!-- check按钮 -->
-    <div class='check'><check-button  class='check-button' :isCheck='this.cartLists.check' @click='clickCheck'/></div>
+    <div class='check'><check-button  class='check-button' :isCheck='this.cartLists.check' @click.native='clickCheck'/></div>
     <!-- 图片 -->
     <div class="cart-img">
       <img :src="cartLists.image" alt="">
@@ -33,6 +33,7 @@ export default {
   },
   methods: {
     clickCheck() {
+      console.log('1')
       this.cartLists.check = !this.cartLists.check 
     }
   }

@@ -15,6 +15,7 @@
     </scroll>
     <detail-bottom-bar @addCart='addToCart'/>
     <back-top @click.native='backTop' v-show='isBackTop'/>
+    <toast/>
   </div>
 </template>
 
@@ -30,10 +31,10 @@ import DetailBottomBar from './childComponents/DetailBottomBar'
 
 import Scroll from 'components/common/scroll/Scroll'
 import GoodsList from 'components/content/goodslist/GoodsList'
-import {itemListenMixin, backTopMixin} from 'common/mixin.js'
+
+import {itemListenMixin, backTopMixin,ToastMixin} from 'common/mixin.js'
 import {debounce} from 'common/utils.js'
 import {mapActions} from 'vuex'
-
 import {getDetailData,Goods,Store,ParamsInfo,getRecommends} from 'network/detailRequest.js'
 
 export default {
@@ -50,10 +51,12 @@ export default {
       recommends:[],
       themeIndex: [],
       getThemeIndex: null,
-      currentIndex: 0
+      currentIndex: 0,
+      message: '',
+      isShow: false,
     }
   },
-  mixins: [itemListenMixin, backTopMixin],
+  mixins: [itemListenMixin, backTopMixin, ToastMixin],
   components: {
     DetailNavBar,
     DetailSwiper,
@@ -64,7 +67,8 @@ export default {
     DetailCommentInfo,
     GoodsList,
     DetailBottomBar,
-    Scroll
+    Scroll,
+
   },
   created() {
     this.iid = this.$route.params.iid
@@ -140,7 +144,11 @@ export default {
       product.iid = this.iid
 
       this.addCart(product).then(res => {
-        console.log(res)
+        // 使用混入方式制作toast
+        // this.show(res)
+
+        console.log(this.$toast)
+        this.$toast.show(res)
       })
     }
   }

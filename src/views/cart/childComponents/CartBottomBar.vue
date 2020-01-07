@@ -8,7 +8,7 @@
     <!-- 合计 -->
     <div class='total'><p>合计:{{totalprice}}</p></div>
     <!-- 去结算 -->
-    <div class='settle'>去计算({{totalCount}})</div>
+    <div class='settle' @click='clickCount'>去计算({{totalCount}})</div>
   </div>
 </template>
 
@@ -63,6 +63,11 @@ export default {
         this.cartList.forEach(item => item.check = false)
       }else {
         this.cartList.forEach(item => item.check = true)
+      }
+    },
+    clickCount() {
+      if(!this.isSelectAll) {
+        this.$toast.show('请添加商品')
       }
     }
   }

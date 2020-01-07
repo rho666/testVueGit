@@ -12,7 +12,7 @@ export default {
       }else {
         payload.count = 1
         context.commit(ADD_TO_CART, payload)
-        resolve('添加商品')
+        resolve('添加商品成功')
       }
     })
   }
